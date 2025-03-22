@@ -2,12 +2,12 @@ name: Daily Santander Cycle Station Notification
 
 on:
   schedule:
-    # Run at 8:15am UK time (UTC+1 in summer, UTC+0 in winter)
+    # Run at 8:00am UK time (UTC+1 in summer, UTC+0 in winter)
     # To handle both standard time and daylight saving time:
-    # 8:05 UTC (8:05 UK time during standard time)
-    # 7:05 UTC (8:05 UK time during daylight saving time)
-    - cron: '15 8 * * *'  # For standard time (winter)
-    - cron: '15 7 * * *'  # For daylight saving time (summer)
+    # 8:00 UTC (8:05 UK time during standard time)
+    # 7:00 UTC (8:05 UK time during daylight saving time)
+    - cron: '00 8 * * *'  # For standard time (winter)
+    - cron: '00 7 * * *'  # For daylight saving time (summer)
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
