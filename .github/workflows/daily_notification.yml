@@ -26,7 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          # Instead of editable install, install the package normally
+          pip install .
           
       - name: Create credentials file
         run: |
@@ -46,4 +47,4 @@ jobs:
           EMPTY_DOCK_THRESHOLD: ${{ secrets.EMPTY_DOCK_THRESHOLD || '5' }}
           SMTP_SERVER: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
           SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-        run: python src/santander_notification/cycle_notification.py 
+        run: python -m santander_notification.cycle_notification 
