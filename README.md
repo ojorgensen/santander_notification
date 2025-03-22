@@ -1,2 +1,92 @@
-# santander_notification
-Email me when the santander cycle station is full
+# Santander Cycle Station Notification
+
+This application monitors the availability of empty docks at Santander Cycle stations in London and sends email notifications based on user-defined conditions.
+
+## Features
+
+- Fetch live Santander Cycle station data from Transport for London (TfL) API
+- Monitor specific stations (default: Westminster Pier)
+- Send email notifications based on available empty docks
+- Configurable thresholds for notifications
+- Easy setup with environment variables
+
+## Setup
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/santander-notification.git
+   cd santander-notification
+   ```
+
+2. Set up your Python environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -e .
+   ```
+
+3. Create a `.env` file with your configuration:
+   ```
+   SENDER_EMAIL=your.email@gmail.com
+   RECIPIENT_EMAIL=your.email@gmail.com
+   
+   # TfL Cycle Station Settings
+   CYCLE_STATION_NAME=Westminster Pier, Westminster
+   EMPTY_DOCK_THRESHOLD=5
+   
+   # SMTP Server Configuration (defaults to Gmail)
+   SMTP_SERVER=smtp.gmail.com
+   SMTP_PORT=587
+   ```
+
+4. For Gmail integration:
+   - Go to https://console.cloud.google.com/
+   - Create a project and enable the Gmail API
+   - Create OAuth credentials and download as `credentials.json`
+   - Place `credentials.json` in the project directory
+   - First time you run the app, it will open a browser window to authenticate
+
+## Usage
+
+### List Available Stations
+
+To see all available stations or search for a specific station:
+
+```bash
+python src/santander-notification/list_stations.py
+# Or search for a specific station
+python src/santander-notification/list_stations.py westminster
+```
+
+### Check a Specific Station and Send Notification
+
+```bash
+python src/santander-notification/cycle_notification.py
+```
+
+This will:
+1. Fetch the latest data for the station specified in your `.env` file
+2. Send an email notification with the current status
+3. If the number of empty docks is below the threshold, the email will include a warning
+
+### Automating with Cron or Task Scheduler
+
+To set up a recurring check, you can use cron (Linux/macOS) or Task Scheduler (Windows).
+
+Example cron entry to check every hour:
+
+```
+0 * * * * cd /path/to/santander-notification && /path/to/venv/bin/python src/santander-notification/cycle_notification.py
+```
+
+## Troubleshooting
+
+- If email sending fails, check your Gmail account settings:
+  - You may need to enable "Less secure app access" or use an App Password
+  - Ensure your `credentials.json` file is correctly set up
+  
+- If the station you want is not found, use the `list_stations.py` script to find the exact station name
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
