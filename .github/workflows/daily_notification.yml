@@ -32,9 +32,6 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync
-      - name: Install package in development mode
-        run: |
-          uv run pip install -e .
       - name: Create credentials file
         run: |
           echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
@@ -53,4 +50,4 @@ jobs:
           EMPTY_DOCK_THRESHOLD: ${{ secrets.EMPTY_DOCK_THRESHOLD || '5' }}
           SMTP_SERVER: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
           SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-        run: uv run python -m santander_notification.cycle_notification 
+        run: uv run python -m src.santander_notification.cycle_notification 
