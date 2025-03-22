@@ -79,6 +79,29 @@ Example cron entry to check every hour:
 0 * * * * cd /path/to/santander-notification && /path/to/venv/bin/python src/santander-notification/cycle_notification.py
 ```
 
+## Automating with GitHub Actions
+
+This repository includes a GitHub Actions workflow that automatically runs the cycle station check every day at 8:15am UK time. To use this feature:
+
+1. Push this repository to GitHub
+2. Go to your repository's "Settings" tab
+3. Navigate to "Secrets and variables" → "Actions"
+4. Add the following repository secrets:
+
+   | Secret Name | Description |
+   |-------------|-------------|
+   | `SENDER_EMAIL` | Your Gmail address used to send notifications |
+   | `RECIPIENT_EMAIL` | Email address to receive notifications |
+   | `GOOGLE_CREDENTIALS` | The entire contents of your `credentials.json` file |
+   | `GOOGLE_TOKEN` | (Optional) The entire contents of your `token.json` file if you have one |
+   | `CYCLE_STATION_NAME` | (Optional) The name of the station to monitor |
+   | `EMPTY_DOCK_THRESHOLD` | (Optional) Threshold for sending warnings |
+
+5. The workflow will run automatically at 8:15am UK time daily
+6. You can also trigger the workflow manually from the "Actions" tab
+
+Note: If you don't provide the optional secrets, the workflow will use the default values (Westminster Pier station with a threshold of 5).
+
 ## Troubleshooting
 
 - If email sending fails, check your Gmail account settings:

@@ -1,0 +1,49 @@
+name: Daily Santander Cycle Station Notification
+
+on:
+  schedule:
+    # Run at 8:15am UK time (UTC+1 in summer, UTC+0 in winter)
+    # To handle both standard time and daylight saving time:
+    # 8:05 UTC (8:05 UK time during standard time)
+    # 7:05 UTC (8:05 UK time during daylight saving time)
+    - cron: '15 8 * * *'  # For standard time (winter)
+    - cron: '15 7 * * *'  # For daylight saving time (summer)
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          
+      - name: Create credentials file
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+        
+      - name: Create token file if available
+        run: |
+          if [ "${{ secrets.GOOGLE_TOKEN }}" != "" ]; then
+            echo '${{ secrets.GOOGLE_TOKEN }}' > token.json
+          fi
+      
+      - name: Run notification script
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          CYCLE_STATION_NAME: ${{ secrets.CYCLE_STATION_NAME || 'Westminster Pier, Westminster' }}
+          EMPTY_DOCK_THRESHOLD: ${{ secrets.EMPTY_DOCK_THRESHOLD || '5' }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+        run: python src/santander_notification/cycle_notification.py 
