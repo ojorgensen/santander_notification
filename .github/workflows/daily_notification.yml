@@ -7,6 +7,7 @@ on:
     # 8:00 UTC (8:05 UK time during standard time)
     # 7:00 UTC (8:05 UK time during daylight saving time)
     - cron: '00 8 * * *'  # For standard time (winter)
+    - cron: '30 7 * * *'  # For standard time (winter)
     - cron: '00 7 * * *'  # For daylight saving time (summer)
   workflow_dispatch:  # Allow manual triggering
 
